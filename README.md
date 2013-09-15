@@ -20,3 +20,16 @@ Keep a count of shopping cart items up to date in the header.
 Update the name of a document in a project file tree from a rename dialog.
 
 Update a username in the header from a user profile form in the main page.
+
+Using angular-model-sync
+===================
+## Creating a new object
+### `create(path, object)`
+- path - RESTful path
+- object - object to create
+
+This function will `POST` object to `path`. The created object is returned from the server
+and stored in the cache.
+
+#### Example
+`create('/users/', { name: 'jsmith' })`
