@@ -1,9 +1,9 @@
 {
   "name": "angular-model-sync",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
     "angular": "~1.0.6",
-    "lodash": "1.2.0"
+    "lodash": "~1.2.0"
   },
   "devDependencies": {
   }
