@@ -28,8 +28,24 @@ Using angular-model-sync
 - path - RESTful path
 - object - object to create
 
+Returns created object.
+
 This function will `POST` object to `path`. The created object is returned from the server
 and stored in the cache.
 
 #### Example
 `create('/users/', { name: 'jsmith' })`
+
+## Read an object
+### `get(path)`
+- path - RESTful path
+
+Returns promise.
+
+If the object is in the cache, the object wrapped in a promise is returned. 
+If the object is not in the cache, a `GET` is issued to the server and the object wrapped in a promise is returned.
+
+#### Example
+`get('/users/')`
+
+`get('/users/123')`
