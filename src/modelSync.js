@@ -21,6 +21,9 @@ angular.module('robbyronk.model-sync', [])
           });
         }
 
+        var suffix = /\/$/.exec(path) ? 'new' : '/new';
+        $rootScope.$broadcast(path + suffix, createdObject);
+
         return angular.copy(createdObject);
       });
     };
