@@ -91,4 +91,17 @@ angular.module('robbyronk.model-sync', [])
         $http.put(path, object).then(callback);
       }
     };
+
+    var partialResponseFields;
+    this.fields = function (/* fields */) {
+      var args = Array.prototype.slice.call(arguments);
+      partialResponseFields = args.join(',');
+      return {
+        get: function (path) {
+          return $http.get(path + '?fields=' + partialResponseFields).then(function (response) {
+            return response.data;
+          })
+        }
+      }
+    };
   });
