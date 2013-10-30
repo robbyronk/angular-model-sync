@@ -24,4 +24,13 @@ describe('Model Query Parameters', function () {
     $httpBackend.flush();
   });
 
+  it('should handle sorting query', function () {
+    $httpBackend.expectGET('/people?sort=name,age').respond(200, {name: 'Arnold', age: 25});
+    Model.sort('name', 'age').get('/people').then(function (data) {
+      expect(data).toBeDefined();
+    });
+    $rootScope.$digest();
+    $httpBackend.flush();
+  });
+
 });

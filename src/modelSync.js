@@ -104,4 +104,15 @@ angular.module('robbyronk.model-sync', [])
         }
       }
     };
+
+    this.sort = function (/* fields */) {
+      var sortBy = Array.prototype.slice.call(arguments).join(',');
+      return {
+        get: function (path) {
+          return $http.get(path + '?sort=' + sortBy).then(function (response) {
+            return response.data;
+          })
+        }
+      }
+    }
   });
