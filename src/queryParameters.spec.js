@@ -51,6 +51,18 @@ describe('Model Query Parameters', function () {
     $httpBackend.flush();
   });
 
+  it('should offset query', function () {
+    $httpBackend.expectGET('/people?offset=10').respond(200, {name: 'Arnold', age: 25});
+    Model.query()
+      .offset(10)
+      .get('/people')
+      .then(function (data) {
+        expect(data).toBeDefined();
+      });
+    $rootScope.$digest();
+    $httpBackend.flush();
+  });
+
   it('should handle partial response with sorting', function () {
     $httpBackend.expectGET('/people?fields=name&sort=age').respond(200, {name: 'Arnold', age: 25});
     Model.query()

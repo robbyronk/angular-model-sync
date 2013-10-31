@@ -93,7 +93,7 @@ angular.module('robbyronk.model-sync', [])
     };
 
     this.query = function () {
-      var selecting, sortedBy, limitTo;
+      var selecting, sortedBy, limitTo, offsetBy;
       return {
         fields: function (/* fields */) {
           selecting = Array.prototype.slice.call(arguments);
@@ -109,11 +109,16 @@ angular.module('robbyronk.model-sync', [])
           limitTo = parseInt(integer, 10);
           return this;
         },
+        offset: function (int) {
+          offsetBy = parseInt(int, 10);
+          return this;
+        },
         get: function (path) {
           var queryParts = [
             (selecting ? 'fields=' + selecting.join(',') : ''),
             (sortedBy ? 'sort=' + sortedBy.join(',') : ''),
-            limitTo ? 'limit=' + limitTo : ''
+            limitTo ? 'limit=' + limitTo : '',
+            offsetBy ? 'offset=' + offsetBy : ''
           ];
           var queryString = '?' + _.remove(queryParts).join('&');
           return $http.get(path + queryString).then(function (response) {
