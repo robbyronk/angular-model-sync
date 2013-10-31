@@ -105,8 +105,8 @@ angular.module('robbyronk.model-sync', [])
           // TODO uniq
           return this;
         },
-        limit: function (integer) {
-          limitTo = parseInt(integer, 10);
+        limit: function (int) {
+          limitTo = parseInt(int, 10);
           return this;
         },
         offset: function (int) {
