@@ -17,18 +17,37 @@ describe('Model Query Parameters', function () {
 
   it('should handle partial response query', function () {
     $httpBackend.expectGET('/people?fields=name,age').respond(200, {name: 'Arnold', age: 25});
-    Model.fields('name', 'age').get('/people').then(function (data) {
-      expect(data).toBeDefined();
-    });
+    Model.query()
+      .fields('name', 'age')
+      .get('/people')
+      .then(function (data) {
+        expect(data).toBeDefined();
+      });
     $rootScope.$digest();
     $httpBackend.flush();
   });
 
   it('should handle sorting query', function () {
     $httpBackend.expectGET('/people?sort=name,age').respond(200, {name: 'Arnold', age: 25});
-    Model.sort('name', 'age').get('/people').then(function (data) {
-      expect(data).toBeDefined();
-    });
+    Model.query()
+      .sort('name', 'age')
+      .get('/people')
+      .then(function (data) {
+        expect(data).toBeDefined();
+      });
+    $rootScope.$digest();
+    $httpBackend.flush();
+  });
+
+  it('should handle partial response with sorting', function () {
+    $httpBackend.expectGET('/people?fields=name&sort=age').respond(200, {name: 'Arnold', age: 25});
+    Model.query()
+      .fields('name')
+      .sort('age')
+      .get('/people')
+      .then(function (data) {
+        expect(data).toBeDefined();
+      });
     $rootScope.$digest();
     $httpBackend.flush();
   });

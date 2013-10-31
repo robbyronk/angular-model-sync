@@ -92,27 +92,27 @@ angular.module('robbyronk.model-sync', [])
       }
     };
 
-    var partialResponseFields;
-    this.fields = function (/* fields */) {
-      var args = Array.prototype.slice.call(arguments);
-      partialResponseFields = args.join(',');
+    this.query = function () {
+      var selecting, sortedBy;
       return {
+        fields: function (/* fields */) {
+          selecting = Array.prototype.slice.call(arguments);
+          return this;
+        },
+        sort: function (/* fields */) {
+          sortedBy = Array.prototype.slice.call(arguments);
+          return this;
+        },
         get: function (path) {
-          return $http.get(path + '?fields=' + partialResponseFields).then(function (response) {
+          var queryParts = [
+            (selecting ? 'fields=' + selecting.join(',') : ''),
+            (sortedBy ? 'sort=' + sortedBy.join(',') : '')
+          ];
+          var queryString = '?' + _.remove(queryParts).join('&');
+          return $http.get(path + queryString).then(function (response) {
             return response.data;
           })
         }
       }
     };
-
-    this.sort = function (/* fields */) {
-      var sortBy = Array.prototype.slice.call(arguments).join(',');
-      return {
-        get: function (path) {
-          return $http.get(path + '?sort=' + sortBy).then(function (response) {
-            return response.data;
-          })
-        }
-      }
-    }
   });
