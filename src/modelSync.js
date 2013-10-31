@@ -93,16 +93,25 @@ angular.module('robbyronk.model-sync', [])
     };
 
     this.query = function () {
+      var withoutPrefix = function (value) {
+        if(_.contains(['-', '+'], value[0])) {
+          return value.substr(1);
+        } else {
+          return value;
+        }
+      };
       var selecting, sortedBy, limitTo, offsetBy;
       return {
         fields: function (/* fields */) {
-          selecting = Array.prototype.slice.call(arguments);
-          // TODO sort and uniq
+          selecting = _.uniq(arguments).sort();
           return this;
         },
         sort: function (/* fields */) {
-          sortedBy = Array.prototype.slice.call(arguments);
-          // TODO uniq
+          sortedBy = _.filter(arguments, function (field, index, fields) {
+            return index === _.findIndex(fields, function (otherField) {
+              return field === otherField || withoutPrefix(field) === withoutPrefix(otherField);
+            });
+          });
           return this;
         },
         limit: function (int) {

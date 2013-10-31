@@ -16,9 +16,21 @@ describe('Model Query Parameters', function () {
   });
 
   it('should handle partial response query', function () {
-    $httpBackend.expectGET('/people?fields=name,age').respond(200, {name: 'Arnold', age: 25});
+    $httpBackend.expectGET('/people?fields=age,name').respond(200, {name: 'Arnold', age: 25});
     Model.query()
       .fields('name', 'age')
+      .get('/people')
+      .then(function (data) {
+        expect(data).toBeDefined();
+      });
+    $rootScope.$digest();
+    $httpBackend.flush();
+  });
+
+  it('should remove duplicates from partial response query', function () {
+    $httpBackend.expectGET('/people?fields=age,name').respond(200, {name: 'Arnold', age: 25});
+    Model.query()
+      .fields('name', 'age', 'name', 'age')
       .get('/people')
       .then(function (data) {
         expect(data).toBeDefined();
@@ -31,6 +43,30 @@ describe('Model Query Parameters', function () {
     $httpBackend.expectGET('/people?sort=name,age').respond(200, {name: 'Arnold', age: 25});
     Model.query()
       .sort('name', 'age')
+      .get('/people')
+      .then(function (data) {
+        expect(data).toBeDefined();
+      });
+    $rootScope.$digest();
+    $httpBackend.flush();
+  });
+
+  it('should remove duplicates from sorting query', function () {
+    $httpBackend.expectGET('/people?sort=name,-age').respond(200, {name: 'Arnold', age: 25});
+    Model.query()
+      .sort('name', '-age', '+age')
+      .get('/people')
+      .then(function (data) {
+        expect(data).toBeDefined();
+      });
+    $rootScope.$digest();
+    $httpBackend.flush();
+  });
+
+  it('should remove unprefixed duplicates from sorting query', function () {
+    $httpBackend.expectGET('/people?sort=name,age').respond(200, {name: 'Arnold', age: 25});
+    Model.query()
+      .sort('name', 'age', 'age')
       .get('/people')
       .then(function (data) {
         expect(data).toBeDefined();
