@@ -131,12 +131,12 @@ angular.module('robbyronk.model-sync', [])
           });
           return this;
         },
-        limit: function (int) {
-          limitTo = parseInt(int, 10);
+        limit: function (integer) {
+          limitTo = parseInt(integer, 10);
           return this;
         },
-        offset: function (int) {
-          offsetBy = parseInt(int, 10);
+        offset: function (integer) {
+          offsetBy = parseInt(integer, 10);
           return this;
         },
         predicates: predicates,
