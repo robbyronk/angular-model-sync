@@ -41,35 +41,37 @@ describe('Model Query Parameters', function () {
     });
   });
 
+  describe('sorting query', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET('/people?sort=name,age').respond(200, {name: 'Arnold', age: 25});
+    });
 
-  it('should handle sorting query', function () {
-    $httpBackend.expectGET('/people?sort=name,age').respond(200, {name: 'Arnold', age: 25});
-    Model.query()
-      .sort('name', 'age')
-      .get('/people')
-      .then(function (data) {
-        expect(data).toBeDefined();
-      });
-  });
+    it('should handle sorting query', function () {
+      Model.query()
+        .sort('name', 'age')
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
 
-  it('should remove duplicates from sorting query', function () {
-    $httpBackend.expectGET('/people?sort=name,-age').respond(200, {name: 'Arnold', age: 25});
-    Model.query()
-      .sort('name', '-age', '+age')
-      .get('/people')
-      .then(function (data) {
-        expect(data).toBeDefined();
-      });
-  });
+    it('should remove duplicates from sorting query', function () {
+      Model.query()
+        .sort('name', 'age', '-age')
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
 
-  it('should remove unprefixed duplicates from sorting query', function () {
-    $httpBackend.expectGET('/people?sort=name,age').respond(200, {name: 'Arnold', age: 25});
-    Model.query()
-      .sort('name', 'age', 'age')
-      .get('/people')
-      .then(function (data) {
-        expect(data).toBeDefined();
-      });
+    it('should remove unprefixed duplicates from sorting query', function () {
+      Model.query()
+        .sort('name', 'age', 'age')
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
   });
 
   it('should limit query', function () {
