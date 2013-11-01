@@ -118,30 +118,44 @@ describe('Model Query Parameters', function () {
       });
   });
 
-  it('should handle filtering', function () {
-    $httpBackend.expectGET('/people?filter=gt(a,5)').respond(200, {name: 'Arnold', age: 25});
-    var p = Model.query().predicates;
-    Model.query()
-      .filter(p.gt('a', 5))
-      .get('/people')
-      .then(function (data) {
-        expect(data).toBeDefined();
-      });
-  });
-
-  it('should handle more complex filtering', function () {
-    $httpBackend.expectGET('/people?filter=and(gt(a,5),lt(a,15))').respond(200, {name: 'Arnold', age: 25});
-    var p = Model.query().predicates,
-      gt = p.gt,
-      lt = p.lt,
+  describe('filter query', function () {
+    var p, and, gt, lt, not;
+    beforeEach(function () {
+      p = Model.query().predicates;
       and = p.and;
-    Model.query()
-      .filter(and(gt('a', 5), lt('a', 15)))
-      .get('/people')
-      .then(function (data) {
-        expect(data).toBeDefined();
-      });
+      gt = p.gt;
+      lt = p.lt;
+      not = p.not;
+    });
+
+    it('should handle filtering', function () {
+      $httpBackend.expectGET('/people?filter=gt(a,5)').respond(200, {name: 'Arnold', age: 25});
+      Model.query()
+        .filter(gt('a', 5))
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
+
+    it('should handle filtering with not', function () {
+      $httpBackend.expectGET('/people?filter=not(gt(a,5))').respond(200, {name: 'Arnold', age: 25});
+      Model.query()
+        .filter(not(gt('a', 5)))
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
+
+    it('should handle more complex filtering', function () {
+      $httpBackend.expectGET('/people?filter=and(gt(a,5),lt(a,15))').respond(200, {name: 'Arnold', age: 25});
+      Model.query()
+        .filter(and(gt('a', 5), lt('a', 15)))
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
   });
-
-
 });
