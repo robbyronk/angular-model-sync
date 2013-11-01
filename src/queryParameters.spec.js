@@ -1,5 +1,6 @@
 describe('Model Query Parameters', function () {
   'use strict';
+  var fakeData = {name: 'Arnold', age: 25};
 
   beforeEach(module('robbyronk.model-sync'));
 
@@ -19,7 +20,7 @@ describe('Model Query Parameters', function () {
 
   describe('partial response', function () {
     beforeEach(function () {
-      $httpBackend.expectGET('/people?fields=age,name').respond(200, {name: 'Arnold', age: 25});
+      $httpBackend.expectGET('/people?fields=age,name').respond(200, fakeData);
     });
 
     it('should handle partial response query', function () {
@@ -43,7 +44,7 @@ describe('Model Query Parameters', function () {
 
   describe('sorting query', function () {
     beforeEach(function () {
-      $httpBackend.expectGET('/people?sort=name,age').respond(200, {name: 'Arnold', age: 25});
+      $httpBackend.expectGET('/people?sort=name,age').respond(200, fakeData);
     });
 
     it('should handle sorting query', function () {
@@ -76,7 +77,7 @@ describe('Model Query Parameters', function () {
 
   describe('pagination query', function () {
     it('should limit query', function () {
-      $httpBackend.expectGET('/people?limit=10').respond(200, {name: 'Arnold', age: 25});
+      $httpBackend.expectGET('/people?limit=10').respond(200, fakeData);
       Model.query()
         .limit(10)
         .get('/people')
@@ -86,7 +87,7 @@ describe('Model Query Parameters', function () {
     });
 
     it('should offset query', function () {
-      $httpBackend.expectGET('/people?offset=10').respond(200, {name: 'Arnold', age: 25});
+      $httpBackend.expectGET('/people?offset=10').respond(200, fakeData);
       Model.query()
         .offset(10)
         .get('/people')
@@ -96,7 +97,7 @@ describe('Model Query Parameters', function () {
     });
 
     it('should limit and offset query', function () {
-      $httpBackend.expectGET('/people?limit=10&offset=10').respond(200, {name: 'Arnold', age: 25});
+      $httpBackend.expectGET('/people?limit=10&offset=10').respond(200, fakeData);
       Model.query()
         .offset(10)
         .limit(10)
@@ -108,7 +109,7 @@ describe('Model Query Parameters', function () {
   });
 
   it('should handle partial response with sorting', function () {
-    $httpBackend.expectGET('/people?fields=name&sort=age').respond(200, {name: 'Arnold', age: 25});
+    $httpBackend.expectGET('/people?fields=name&sort=age').respond(200, fakeData);
     Model.query()
       .fields('name')
       .sort('age')
@@ -129,7 +130,7 @@ describe('Model Query Parameters', function () {
     });
 
     it('should handle filtering', function () {
-      $httpBackend.expectGET('/people?filter=gt(a,5)').respond(200, {name: 'Arnold', age: 25});
+      $httpBackend.expectGET('/people?filter=gt(a,5)').respond(200, fakeData);
       Model.query()
         .filter(gt('a', 5))
         .get('/people')
@@ -139,7 +140,7 @@ describe('Model Query Parameters', function () {
     });
 
     it('should handle filtering with not', function () {
-      $httpBackend.expectGET('/people?filter=not(gt(a,5))').respond(200, {name: 'Arnold', age: 25});
+      $httpBackend.expectGET('/people?filter=not(gt(a,5))').respond(200, fakeData);
       Model.query()
         .filter(not(gt('a', 5)))
         .get('/people')
@@ -149,7 +150,7 @@ describe('Model Query Parameters', function () {
     });
 
     it('should handle more complex filtering', function () {
-      $httpBackend.expectGET('/people?filter=and(gt(a,5),lt(a,15))').respond(200, {name: 'Arnold', age: 25});
+      $httpBackend.expectGET('/people?filter=and(gt(a,5),lt(a,15))').respond(200, fakeData);
       Model.query()
         .filter(and(gt('a', 5), lt('a', 15)))
         .get('/people')
