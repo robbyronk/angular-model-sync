@@ -168,10 +168,10 @@ describe('Model Query Parameters', function () {
         lt = p.lt;
       $httpBackend.expectGET('/people' +
           '?fields=age,name' +
+          '&filter=and(gt(a,5),lt(a,15))' +
           '&limit=10' +
           '&offset=10' +
-          '&sort=age,name' +
-          '&filter=and(gt(a,5),lt(a,15))')
+          '&sort=age,name')
         .respond(200, fakeData);
       Model.query()
         .fields('name', 'age')

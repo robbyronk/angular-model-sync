@@ -147,10 +147,10 @@ angular.module('robbyronk.model-sync', [])
         get: function (path) {
           var queryParts = [
             (selecting ? 'fields=' + selecting.join(',') : ''),
-            (sortedBy ? 'sort=' + sortedBy.join(',') : ''),
+            filterBy ? 'filter=' + filterBy : '',
             limitTo ? 'limit=' + limitTo : '',
             offsetBy ? 'offset=' + offsetBy : '',
-            filterBy ? 'filter=' + filterBy : ''
+            (sortedBy ? 'sort=' + sortedBy.join(',') : '')
           ];
           var queryString = '?' + _.remove(queryParts).join('&');
           return $http.get(path + queryString).then(function (response) {
