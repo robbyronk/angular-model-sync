@@ -74,24 +74,37 @@ describe('Model Query Parameters', function () {
     });
   });
 
-  it('should limit query', function () {
-    $httpBackend.expectGET('/people?limit=10').respond(200, {name: 'Arnold', age: 25});
-    Model.query()
-      .limit(10)
-      .get('/people')
-      .then(function (data) {
-        expect(data).toBeDefined();
-      });
-  });
+  describe('pagination query', function () {
+    it('should limit query', function () {
+      $httpBackend.expectGET('/people?limit=10').respond(200, {name: 'Arnold', age: 25});
+      Model.query()
+        .limit(10)
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
 
-  it('should offset query', function () {
-    $httpBackend.expectGET('/people?offset=10').respond(200, {name: 'Arnold', age: 25});
-    Model.query()
-      .offset(10)
-      .get('/people')
-      .then(function (data) {
-        expect(data).toBeDefined();
-      });
+    it('should offset query', function () {
+      $httpBackend.expectGET('/people?offset=10').respond(200, {name: 'Arnold', age: 25});
+      Model.query()
+        .offset(10)
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
+
+    it('should limit and offset query', function () {
+      $httpBackend.expectGET('/people?limit=10&offset=10').respond(200, {name: 'Arnold', age: 25});
+      Model.query()
+        .offset(10)
+        .limit(10)
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
   });
 
   it('should handle partial response with sorting', function () {
