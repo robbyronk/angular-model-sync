@@ -94,11 +94,10 @@ angular.module('robbyronk.model-sync', [])
 
     this.query = function () {
       var withoutPrefix = function (value) {
-        if(_.contains(['-', '+'], value[0])) {
+        if (_.contains(['-', '+'], value[0])) {
           return value.substr(1);
-        } else {
-          return value;
         }
+        return value;
       };
       var generatePredicate = function (name, arity) {
         return function () {
