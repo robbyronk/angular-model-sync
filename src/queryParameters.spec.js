@@ -108,17 +108,6 @@ describe('Model Query Parameters', function () {
     });
   });
 
-  it('should handle partial response with sorting', function () {
-    $httpBackend.expectGET('/people?fields=name&sort=age').respond(200, fakeData);
-    Model.query()
-      .fields('name')
-      .sort('age')
-      .get('/people')
-      .then(function (data) {
-        expect(data).toBeDefined();
-      });
-  });
-
   describe('filter query', function () {
     var p, and, gt, lt, not;
     beforeEach(function () {
@@ -152,6 +141,43 @@ describe('Model Query Parameters', function () {
     it('should handle more complex filtering', function () {
       $httpBackend.expectGET('/people?filter=and(gt(a,5),lt(a,15))').respond(200, fakeData);
       Model.query()
+        .filter(and(gt('a', 5), lt('a', 15)))
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
+  });
+
+  describe('multiple query parameters', function () {
+    it('should handle partial response with sorting', function () {
+      $httpBackend.expectGET('/people?fields=name&sort=age').respond(200, fakeData);
+      Model.query()
+        .fields('name')
+        .sort('age')
+        .get('/people')
+        .then(function (data) {
+          expect(data).toBeDefined();
+        });
+    });
+
+    it('should handle all the queries', function () {
+      var p = Model.query().predicates,
+        and = p.and,
+        gt = p.gt,
+        lt = p.lt;
+      $httpBackend.expectGET('/people' +
+          '?fields=age,name' +
+          '&limit=10' +
+          '&offset=10' +
+          '&sort=age,name' +
+          '&filter=and(gt(a,5),lt(a,15)')
+        .respond(200, fakeData);
+      Model.query()
+        .fields('name', 'age')
+        .limit(10)
+        .offset(10)
+        .sort('age', 'name')
         .filter(and(gt('a', 5), lt('a', 15)))
         .get('/people')
         .then(function (data) {
