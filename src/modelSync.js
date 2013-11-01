@@ -100,7 +100,7 @@ angular.module('robbyronk.model-sync', [])
           return value;
         }
       };
-      var selecting, sortedBy, limitTo, offsetBy;
+      var selecting, sortedBy, limitTo, offsetBy, filterBy;
       return {
         fields: function (/* fields */) {
           selecting = _.uniq(arguments).sort();
@@ -122,12 +122,34 @@ angular.module('robbyronk.model-sync', [])
           offsetBy = parseInt(int, 10);
           return this;
         },
+        predicates: {
+          and: function () {
+            return 'and(' + _.toArray(arguments).join(',') + ')';
+          },
+          or: function () {
+            return 'or(' + _.toArray(arguments).join(',') + ')';
+          },
+          not: function (predicate) {
+            return 'not(' + predicate + ')';
+          },
+          gt: function (a, b) {
+            return 'gt(' + a + ',' + b + ')';
+          },
+          lt: function (a, b) {
+            return 'lt(' + a + ',' + b + ')';
+          }
+        },
+        filter: function (predicate) {
+          filterBy = predicate;
+          return this;
+        },
         get: function (path) {
           var queryParts = [
             (selecting ? 'fields=' + selecting.join(',') : ''),
             (sortedBy ? 'sort=' + sortedBy.join(',') : ''),
             limitTo ? 'limit=' + limitTo : '',
-            offsetBy ? 'offset=' + offsetBy : ''
+            offsetBy ? 'offset=' + offsetBy : '',
+            filterBy ? 'filter=' + filterBy : ''
           ];
           var queryString = '?' + _.remove(queryParts).join('&');
           return $http.get(path + queryString).then(function (response) {
