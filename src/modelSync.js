@@ -100,6 +100,23 @@ angular.module('robbyronk.model-sync', [])
           return value;
         }
       };
+      var generatePredicate = function (name, arity) {
+        return function () {
+          if (arity && arguments.length !== arity) {
+            throw new Error('Expected ' + arity + ' arguments, got ' + arguments.length);
+          }
+          return name + '(' + _.toArray(arguments).join(',') + ')';
+        };
+      };
+      var predicates = {};
+      angular.forEach(['and', 'or', 'in', 'nin'], function (name) {
+        predicates[name] = generatePredicate(name);
+      });
+      angular.forEach(['gt', 'lt', 'gte', 'lte', 'eq', 'neq'], function (name) {
+        predicates[name] = generatePredicate(name, 2);
+      });
+      predicates.not = generatePredicate('not', 1);
+
       var selecting, sortedBy, limitTo, offsetBy, filterBy;
       return {
         fields: function (/* fields */) {
@@ -122,23 +139,7 @@ angular.module('robbyronk.model-sync', [])
           offsetBy = parseInt(int, 10);
           return this;
         },
-        predicates: {
-          and: function () {
-            return 'and(' + _.toArray(arguments).join(',') + ')';
-          },
-          or: function () {
-            return 'or(' + _.toArray(arguments).join(',') + ')';
-          },
-          not: function (predicate) {
-            return 'not(' + predicate + ')';
-          },
-          gt: function (a, b) {
-            return 'gt(' + a + ',' + b + ')';
-          },
-          lt: function (a, b) {
-            return 'lt(' + a + ',' + b + ')';
-          }
-        },
+        predicates: predicates,
         filter: function (predicate) {
           filterBy = predicate;
           return this;
