@@ -8,6 +8,7 @@ angular.module('robbyronk.model-sync.modelQuery', [])
       }
       return value;
     };
+
     var generatePredicate = function (name, arity) {
       return function () {
         if (arity && arguments.length !== arity) {
@@ -16,6 +17,7 @@ angular.module('robbyronk.model-sync.modelQuery', [])
         return name + '(' + _.toArray(arguments).join(',') + ')';
       };
     };
+
     var predicates = {};
     angular.forEach(['and', 'or', 'in', 'nin'], function (name) {
       predicates[name] = generatePredicate(name);
@@ -27,6 +29,14 @@ angular.module('robbyronk.model-sync.modelQuery', [])
 
     var selecting, sortedBy, limitTo, offsetBy, filterBy;
     return {
+      query: function () {
+        selecting = [];
+        sortedBy = [];
+        limitTo = '';
+        offsetBy = '';
+        filterBy = '';
+        return this;
+      },
       fields: function (/* fields */) {
         selecting = _.uniq(arguments).sort();
         return this;
