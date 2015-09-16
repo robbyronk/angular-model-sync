@@ -50,6 +50,46 @@ If the object is not in the cache, a `GET` is issued to the server and the objec
 
 `get('/users/123')`
 
+## Delete an object
+### `delete(path)`
+- path - RESTful path
+
+Returns nothing.
+
+A `DELETE` is issued to the server and the object is removed, if present, from the cache.
+A broadcast for the collection containing the object is sent to all scopes to remove the object across the app.
+
+#### Example
+`delete('/users/123')`
+
+## Update an object
+### `update(path, object)`
+- path - RESTful path
+- object - object to update with
+
+Returns nothing.
+
+A `PUT` is issued to the server. If the request to the server is successful, the object is updated in the cache and across
+the app.
+
+#### Example
+`update('/users/123', { name: 'ksmith' })`
+
+## Update an object automatically
+### `subscribe(localScope, localName, path)`
+- localScope - the scope in which to subscribe
+- localName - name of the variable in the scope to update to and from
+- path - RESTful path
+
+Returns nothing.
+
+Watches the variable in scope. When changes are made to the variable, the changes are propagated to the server via `PUT`
+request. If the request is successful, the changes are broadcast to the rest of the app. A event listener is also set up 
+to listen for changes to this path and update the local variable. This function is the magic of angular-model-sync.
+
+#### Example
+`subscribe(scope, 'user', '/users/123')`
+
 # Querying with Parameters
 The `modelQuery` factory creates an object to be used to query a server to find
 a set of objects that match conditions, return selected fields, sort objects and
