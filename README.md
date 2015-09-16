@@ -90,7 +90,9 @@ to listen for changes to this path and update the local variable. This function 
 #### Example
 `subscribe(scope, 'user', '/users/123')`
 
-# Querying with Parameters
+======================
+
+# ModelQuery: Querying with Parameters
 The `modelQuery` factory creates an object to be used to query a server to find
 a set of objects that match conditions, return selected fields, sort objects and
 paginate objects.
@@ -159,36 +161,58 @@ GET /users?limit=5&offset=25
 Filtering is similar to the where clause of a SQL statement in that only objects
 that pass the specified conditions are returned.
 The filter function takes a string that represents a predicate. The developer is not
-expected to make this string themselves though but is instead expected to use the
-predicates provided (or make your own) in the `predicates` object.
+expected to make this string themselves though but is instead expected to use and extend the
+predicates provided in the `predicates` object.
 
 ### Predicates
-#### and
-`and` takes any number of predicate arguments
-
-#### or
-`or` takes any number of predicate arguments
-
-#### not
-`not` takes a single predicate argument
-
+#### lt (less than)
+#### lte (less than)
 #### gt (greater than)
-`gt` takes two arguments. The first is a property of the object that you are querying.
+#### gte (less than)
+`lt`, `lte`, `gt` and `gte` take two arguments. The first is a property of the object that you are querying.
 The second is a number or another property of the object that you are querying.
 
 ```javascript
-modelQuery.predicates.gt('age', 55)
+predicate = modelQuery.predicates.gt('age', 55)
+modelQuery.filter(predicate).get('/users')
 ```
-returns
+will make an HTTP request to:
 ```
-gt(age,55)
+GET /users?filter=gt(age,55)
 ```
-
-#### lt (less than)
-#### lte (less than)
-#### gte (less than)
-See greater than. Same number and types of arguments.
 
 #### eq (equal)
-`eq` takes two arguments. The first is a property of the object that you are querying.
+#### neq (not equal)
+`eq` and `neq` take two arguments. The first is a property of the object that you are querying.
 The second is a number, boolean, string or another property. Strings must be quoted.
+
+```javascript
+predicate = modelQuery.predicates.eq('registered', true)
+modelQuery.filter(predicate).get('/users')
+```
+will make an HTTP request to:
+```
+GET /users?filter=eq(registered,true)
+```
+
+#### and
+`and` takes any number of predicate arguments.
+
+#### or
+`or` takes any number of predicate arguments.
+
+#### not
+`not` takes a single predicate argument.
+
+```javascript
+p = modelQuery.predicates
+predicate = p.and(
+  p.eq('registered', true),
+  p.gt('age', 55)
+)
+modelQuery.filter(predicate).get('/users')
+```
+will make an HTTP request to:
+```
+GET /users?filter=and(eq(registered,true),gt(age,55))
+```
