@@ -12,7 +12,7 @@ Run `bower install angular-model-sync` or copy modelSync.js to your JS folder.
 
 Include the `robbyronk.model-sync` module in your app.
 
-Example Usages
+Example Use Cases
 ==================
 
 Keep a count of shopping cart items up to date in the header.
